@@ -1,0 +1,21 @@
+function [PX,PY,EMIX]=assmatFD(nx,ny,hx,hy)
+A=zeros(nx,nx);
+scal=-2/hx^2;
+A=A+scal*eye(nx,nx)+diag(diag(eye(nx-1,nx-1)),1)/hx^2+diag(diag(eye(nx-1,nx-1)),-1)/hx^2;
+A(1,1)=-1/hx^2;
+A(nx,nx)=-1/hx^2;
+[PX,D]=eig(A);
+EX=diag(D);
+clear A; clear D;
+A=zeros(ny,ny);
+scal=-2/hy^2;
+A=A+scal*eye(ny,ny)+diag(diag(eye(ny-1,ny-1)),1)/hy^2+diag(diag(eye(ny-1,ny-1)),-1)/hy^2;
+A(1,1)=-1/hy^2;
+A(ny,ny)=-1/hy^2;
+[PY,D]=eig(A);
+EY=diag(D);
+EMIX=zeros(nx,ny);
+EMIX=ones(nx,1)*EY'+EX*ones(ny,1)';
+EMIX(nx,ny)=1;
+EMIX=1./EMIX;
+clear A; clear D; clear EX; clear EY;
